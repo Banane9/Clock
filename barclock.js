@@ -5,23 +5,31 @@ barClock = function(canvasId, radius, space)
 		var date = new Date();
 		var daysInMonth = new Date(date.getYear(), date.getMonth(), 0).getDate();
 		
-		//Convert times to radians and include lower unit
+		//Include lower units in the time
+		var times = []
+		times.Milliseconds = date.getMilliseconds();
+		times.Seconds = date.getSeconds() + (times.Milliseconds / 1000);
+		times.Minutes = date.getMinutes() + (times.Seconds / 60);
+		times.Hours = date.getHours() + (times.Minutes / 60);
+		times.Days = date.getDay() + (times.Hours / 24);
+		
+		//Convert times to radians
 		var radians = [];
-		radians.Milliseconds = date.getMilliseconds() * (2 / 1000);
-		radians.Seconds = (date.getSeconds() * (2 / 60)) + (radians.Milliseconds / 1000);
-		radians.Minutes = (date.getMinutes() * (2 / 60)) + (radians.Seconds / 60);
-		radians.Hours = (date.getHours() * (2 / 24)) + (radians.Minutes / 60);
-		radians.Days = (date.getDay() * (2 / daysInMonth)) + (radians.Hours / 24);
+		radians.Milliseconds = times.Milliseconds * (2 / 1000);
+		radians.Seconds = times.Seconds * (2 / 60);
+		radians.Minutes = times.Minutes * (2 / 60);
+		radians.Hours = times.Hours * (2 / 24);
+		radians.Days = times.Days * (2 / daysInMonth);
 		
 		//Render bars
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 		for (i = 0; i < this.timeUnits.length; i++)
 		{
-			if (radians[this.timeUnits[i]] < this.previous[this.timeUnits[i]])
+			if (times[this.timeUnits[i]] < this.previous[this.timeUnits[i]])
 			{
 				this.clockwise[this.timeUnits[i]] = !this.clockwise[this.timeUnits[i]];
 			}
-			this.previous[this.timeUnits[i]] = radians[this.timeUnits[i]];
+			this.previous[this.timeUnits[i]] = times[this.timeUnits[i]];
 			
 			var outerRadius = this.barWidth * (1 + i);
 			this.context.beginPath();
