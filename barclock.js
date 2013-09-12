@@ -61,13 +61,9 @@ barClock = function(canvasId, radius, space)
 			//Convert the radians into degrees
 			var degrees = Math.round((radians[this.timeUnits[i]] - (1.5 * Math.PI)) * (180 / Math.PI));
 			
-			//Create the colours for the bar centre and border
-			var rgbCenter = HSV2RGB({H: degrees, S: 100, V: 100});
-			var rgbBorder = HSV2RGB({H: degrees, S: 100, V: 60});
-			
 			//Convert the RGB to Hex
-			this.context.fillStyle = RGB2Hex(rgbCenter.R, rgbCenter.G, rgbCenter.B);
-			this.context.strokeStyle = RGB2Hex(rgbBorder.R, rgbBorder.G, rgbBorder.B);
+			this.context.fillStyle = this.fillStyle[degrees];
+			this.context.strokeStyle = this.strokeStyle[degrees];
 			
 			//Draw the bars
 			this.context.fill();
@@ -107,6 +103,12 @@ barClock = function(canvasId, radius, space)
 	this.clockwise = {Milliseconds: false, Seconds: false, Minutes: false, Hours: false, Days: false};
 	
 	//style
-	this.fillStyle = {Milliseconds: "#FF0000", Seconds: "#FFFF00", Minutes: "#00FF00", Hours: "#0000FF", Days: "#FF00FF"};
-	this.strokeStyle = {Milliseconds: "#CC0000", Seconds: "#CCCC00", Minutes: "#00CC00", Hours: "#0000CC", Days: "#CC00CC"};
+	this.fillStyle = [];
+	this.strokeStyle = [];
+	//Create Hex colour-codes for every degree
+	for (i = 0; i <= 360; i++)
+	{
+		this.fillStyle[i] = RGB2Hex(HSV2RGB({H: i, S: 100, V: 100}));
+		this.strokeStyle[i] = RGB2Hex(HSV2RGB({H: i, S: 100, V: 60}));
+	}
 }

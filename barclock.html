@@ -24,13 +24,24 @@
 				<label style="padding-left:30px;">Space between bars: <input type="checkbox" onchange="clock.space = this.checked;" id="space" name="space" checked="checked"/></label>
 			</span>
 			<!-- The canvas, with message for browsers not supporting it -->
-			<canvas id="barclock" width="100" height="100" onmousewheel="e = event; console.log('Scroll!');">
+			<canvas id="barclock" width="200" height="200" onmousewheel="e = event; console.log('Scroll!');">
 				<p>Please use a browser that supports the HTML5 Canvas Element!</p>
 			</canvas>
 		</div>
 		<script>
 			clock = new barClock("barclock", 200, true);
-			setInterval(function() { clock.draw(); }, 60);
+			
+			activateClock = function()
+			{
+				drawInterval = setInterval(function() { clock.draw(); }, 60);
+			}
+			
+			deactivateClock = function()
+			{
+				clearInterval(drawInterval);
+			}
+			
+			activateClock();
 		</script>
 	</body>
 </html>
