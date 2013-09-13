@@ -1,4 +1,4 @@
-barClock = function(canvasId, radius, space)
+barClock = function(canvasId, radius, space, HSVCenter, HSVBorder)
 {
 	this.draw = function()
 	{
@@ -68,6 +68,20 @@ barClock = function(canvasId, radius, space)
 			//Draw the bars
 			this.context.fill();
 			this.context.stroke();
+			
+			if (this.timeUnits[i] != "Milliseconds")
+			{
+				this.context.fillStyle = "#000000";
+				this.context.font = (this.space ? 0.3 : 0.7) * this.barWidth + "px Arial";
+				this.context.textAlign = "center";
+				this.context.textBaseline = "left";
+				
+				//PI Values shifted + 1.5PI
+				var textRadius =  -(centerRadius); //radians[this.timeUnits[i]] > 2 * Math.PI && radians[this.timeUnits[i]] < 3 * Math.PI ? -(centerRadius) : centerRadius;
+				var textAngle = space ? -((1 / i) * 1.2) : -((1 / i) * 2.5); //radians[this.timeUnits[i]] > 2 * Math.PI && radians[this.timeUnits[i]] < 3 * Math.PI ? -(1 / i) : 1 / i;
+				var textOffset = 0; //radians[this.timeUnits[i]] > 2 * Math.PI && radians[this.timeUnits[i]] < 3 * Math.PI ? -(radians[this.timeUnits[i]]) + 0.7 * Math.PI : -(radians[this.timeUnits[i]]) - 0.7 * Math.PI;
+				drawTextAlongArc(this.context, Math.floor(times[this.timeUnits[i]]) + " " + this.timeUnits[i], this.center, this.center, textRadius, textAngle, textOffset);
+			}
 		}
 	};
 	
@@ -89,7 +103,7 @@ barClock = function(canvasId, radius, space)
 		this.canvas.height = 2 * radius;
 	this.center = radius;
 	this.context = this.canvas.getContext("2d");
-	this.space = space ? space : false;
+	this.space = space ? true : false;
 	
 	//Time units
 	this.timeUnits = ["Milliseconds", "Seconds", "Minutes", "Hours", "Days"];
@@ -105,10 +119,56 @@ barClock = function(canvasId, radius, space)
 	//style
 	this.fillStyle = [];
 	this.strokeStyle = [];
-	//Create Hex colour-codes for every degree
-	for (i = 0; i <= 360; i++)
+	//For Center
+	if (HSVCenter != null)
 	{
-		this.fillStyle[i] = RGB2Hex(HSV2RGB({H: i, S: 100, V: 100}));
-		this.strokeStyle[i] = RGB2Hex(HSV2RGB({H: i, S: 100, V: 60}));
+		if (HSVCenter.H == "auto")
+		{
+			for (i = 0; i <= 360; i++)
+			{
+				this.fillStyle[i] = RGB2Hex(HSV2RGB({H: i, S: HSVCenter.S, V: HSVCenter.V}));
+			}
+		}
+		else
+		{
+			var hex = RGB2Hex(HSV2RGB({H: HSVCenter.H, S: HSVCenter.S, V: HSVCenter.V}));
+			for (i = 0; i <= 360; i++)
+			{
+				this.fillStyle[i] = hex;
+			}
+		}
+	}
+	else
+	{
+		for (i = 0; i <= 360; i++)
+		{
+			this.fillStyle[i] = RGB2Hex(HSV2RGB({H: i, S: 50, V: 100}));
+		}
+	}
+	//For Border
+	if (HSVBorder != null)
+	{
+		if (HSVBorder.H == "auto")
+		{
+			for (i = 0; i <= 360; i++)
+			{
+				this.fillStyle[i] = RGB2Hex(HSV2RGB({H: i, S: HSVBorder.S, V: HSVBorder.V}));
+			}
+		}
+		else
+		{
+			var hex = RGB2Hex(HSV2RGB({H: HSVBorder.H, S: HSVBorder.S, V: HSVBorder.V}));
+			for (i = 0; i <= 360; i++)
+			{
+				this.fillStyle[i] = hex;
+			}
+		}
+	}
+	else
+	{
+		for (i = 0; i <= 360; i++)
+		{
+			this.strokeStyle[i] = RGB2Hex(HSV2RGB({H: i, S: 100, V: 60}));
+		}
 	}
 }

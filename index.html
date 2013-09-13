@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Bar Clock</title>
+		<style type="text/css">
+			#barclock
+			{
+				margin-top:20px;
+				margin-right:auto;
+				margin-left:auto;
+				border: 2px solid #000000;
+				border-radius:10px;
+				height:400px;
+				width:400px;
+			}
+		</style>
+		<script>
+			changeBarclockSettings = function()
+			{
+				var radius = document.getElementById("radius").value;
+				
+				document.getElementById("barclock").src = "./barclock.php?radius=" + radius + "&space=" + document.getElementById("space").checked + "&HSVCenter[H]=auto&HSVCenter[S]=50&HSVCenter[V]=100";
+				
+				var iframe = document.getElementById("barclock");
+					iframe.style.height = (radius * 2) + "px";
+					iframe.style.width = (radius * 2) + "px";
+			}
+		</script>
+	</head>
+	<body>
+		<!-- Heading -->
+		<h1 style="margin-left:auto; margin-right:auto; width:33%; text-align:center; border-bottom-style:solid; border-bottom-width:2px; border-bottom-color:#000000;">Bar Clock</h1>
+		<!-- Text block for the settings and canvas -->
+		<div style ="margin-left:auto; margin-right:auto; text-align:center;">
+			<span style="display:block;">
+				<span>Radius: <input type="text" onchange="changeBarclockSettings();" id="radius" name="radius" size="5" maxlength="4" value="200"/></span>
+				<label style="padding-left:30px;">Space between bars: <input type="checkbox" onchange="changeBarclockSettings();" id="space" name="space" checked="checked"/></label>
+			</span>
+			<!-- Iframe for the clock -->
+			<iframe id="barclock" src="./barclock.php?radius=200&space=true"></iframe>
+		</div>
+	</body>
+</html>
